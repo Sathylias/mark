@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+#
+# Program: markit
+# Description: bookmark a directory or file to view it later
+#
+# Author: Maxime Daraiche <maxiscoding@gmail.com>
+#
+#/ Usage: markit [OPTIONS]... [ARGUMENTS]...
+#/
+#/ 
+#/ OPTIONS
+#/   help             Print this help message
+#/
+#/   add [arguments]
+#/                Add a new entry to markit 
+#/
+#/ EXAMPLES
+#/
+
+#set -eou pipefail # Sane settings to keep my sanity
+IFS=$'\n\t'
+
+readonly markit_file="${HOME}/.markit"
+
+# Boy, what a very useful wizardry, jolly good !
+_usage() {
+  grep '^#/' "$0" | cut -c4-
+  exit 0
+}
+
+_die() {
+  local err_msg="$1"
+    
+  printf "Error: %s\n" "$err_msg" && exit 1
+}
+
+_parse_args() {
+  for i in "$@"; do
+    case "$i" in
+      help)
+	usage
+	;;
+      add) # TODO: Add the possibility to optionally specify the path instead of using 'pwd'
+	shift
+	local entry_num=$(wc -l "$markit_file" | awk '{print $1}')
+	entry_num=$(($entry_num + 1))
+	printf "Saved the directory (%s) to markit:\n" "$(pwd)"
+	# TODO: Verify if the entry already exists
+	echo "${entry_num}) $(pwd)" >> "$markit_file"
+	;;
+      cd) # TODO: Use pushd instead of cd, this way, we can do interesting stuff
+	shift
+	local chdir=$(cat "$markit_file" | grep "$1" | awk '{print $2}')
+	#echo "$chdir"
+	cd "$chdir"
+	printf "Changed to directory %s..\n" "$chdir"
+	;;
+      ls)
+	for entries in $(cat "$markit_file"); do
+	  printf "%s\n" "$entries"
+	done
+	;;
+    esac
+  done
+}
+
+_markit_check_file() {
+  if ! [ -f "$markit_file" ]; then
+    printf "Creating the markit file at %s..\n" "$markit_file"
+    touch "$markit_file"
+  fi
+}
+
+_markit_add() {
+  :
+}
+
+_markit() {
+  markit_check_file
+
+  parse_args "$@"
+
+}
+
+case $- in
+  *i*) ;; # assume being sourced, do nothing
+  *) markit "$@"
+esac
