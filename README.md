@@ -1,17 +1,17 @@
-##### What ?
+#### What ?
 
 Another command line tool that lets you move faster between different
 directories. 
 
 Just like 'fasd', 'autojump' & 'z', but much worse and incomplete..
 
-##### How ?
+#### How ?
 
 - Move the markit script somewhere in your path
 - Source the script from your favorite shell
-> source $(which markit)
+    source $(which markit)
 
-##### Why ?
+#### Why ?
 
 I spend so much time 'cd'ing to the same directories, this will save me some
 time. I only learned about much better alternative like 'fasd', 'autojump' & 'z'
