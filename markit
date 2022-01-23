@@ -75,7 +75,7 @@ _markit_add() {
   :
 }
 
-_markit() {
+markit() {
   markit_check_file
 
   parse_args "$@"
