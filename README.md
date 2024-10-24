@@ -28,10 +28,13 @@ source $PATH_TO_SCRIPT/mark
 
 ``` bash
 [user@host ~/dev/scripts/project1 ]$ mark
+
 [user@host ~/dev/scripts/project1 ]$ mls
 1 /home/user/dev/repositories/project_x/src
 2 /home/user/dev/scripts/project1 
+
 [user@host ~/dev/scripts/project1 ]$ mcd 1
+
 [user@host ~/dev/repositories/project_x/src ]$ 
 ```
 
