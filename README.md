@@ -3,24 +3,39 @@
 Another command line tool that lets you move faster between different
 directories. 
 
-Just like 'fasd', 'autojump' & 'z', but much worse and incomplete..
-
 ## How ?
 
-- Move the markit script somewhere in your path
-- Source the script from your favorite shell
+- Add the following line to your `.bashrc` pointing to the script directory
 
 ```bash
-$ source $(which markit) 
+source $PATH_TO_SCRIPT/mark
 ```
-Or use the whole path to the script.
 
-## Why ?
+- When in a directory that you want to mark, just type `mark`
 
-I spend so much time 'cd'ing to the same directories, this will save me some
-time. I only learned about much better alternative like 'fasd', 'autojump' & 'z'
-after I had started to write this tool
+- To list the marks, just type `mark ls`
 
-Also, it was a great learning experience..
+- A number / index is assigned to each marks. which will be outputted when using `mark ls`
 
-*Important Note:* This is an incomplete project, use it at your own expense...
+- To `cd` to a directory, type `mark cd <number>`
+
+- Some aliases are defined for ease of use
+  - `m` is an alias for `mark`
+  - `mcd` is an alias for `mark cd`
+  - `mls` is an alias for `mark ls`
+
+**Example**
+
+``` bash
+[user@host ~/dev/scripts/project1 ]$ mark
+[user@host ~/dev/scripts/project1 ]$ mls
+1 /home/user/dev/repositories/project_x/src
+2 /home/user/dev/scripts/project1 
+[user@host ~/dev/scripts/project1 ]$ mcd 1
+[user@host ~/dev/repositories/project_x/src ]$ 
+```
+
+**Changing location of `.mark` file**
+
+- By default, the mark file is located in `$HOME/.mark`.
+You can change this behaviour by modifying the `$MARK_FILE` environment variable
