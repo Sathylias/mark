@@ -1,0 +1,40 @@
+mark() {
+
+  if ! [ -f "$MARK_FILE" ]; then
+    echo "> Creating mark file at ${MARK_FILE}\n"
+    touch "$MARK_FILE"
+  fi
+
+  case "$1" in
+  ls)
+    cat $MARK_FILE
+    ;;
+  cd)
+    shift
+    local dir=$(cat "$MARK_FILE" | grep -E '^[0-9]{1,2}' | awk -v idx="$1" '$1 == idx {print $2}')
+    cd "$dir"
+    ;;
+  "")
+    echo "> Created mark for $PWD"
+    local entry_num=$(wc -l "$MARK_FILE" | awk '{print $1}')
+    entry_num=$(($entry_num + 1))
+    echo "${entry_num} ${PWD}" >>$MARK_FILE
+    ;;
+  *)
+    echo -e "Unrecognized option: \033[0;31m$@\033[0m"
+    ;;
+  esac
+}
+
+if [[ "$0" = "$BASH_SOURCE" ]]; then
+  echo "Please source this script. Do not execute." && exit
+fi
+
+if [[ -z "$MARK_SOURCED" ]]; then
+  export MARK_SOURCED=1
+  export MARK_FILE="${MARK_FILE:-${HOME}/.mark}"
+
+  alias m='mark'
+  alias mcd='mark cd'
+  alias mls='mark ls'
+fi
