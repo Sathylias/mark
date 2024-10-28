@@ -15,10 +15,26 @@ mark() {
     cd "$dir"
     ;;
   "")
-    echo "> Created mark for $PWD"
-    local entry_num=$(wc -l "$MARK_FILE" | awk '{print $1}')
-    entry_num=$(($entry_num + 1))
-    echo "${entry_num} ${PWD}" >>$MARK_FILE
+    entry_exist=$(cat "$MARK_FILE" | awk '{print $2}' | grep -w "^${PWD}$" | wc -l)
+    if [[ "$entry_exist" -ne 0 ]]; then
+      echo "> Entry already exists."
+    else
+      echo "> Created mark for $PWD"
+      local entry_num=$(wc -l "$MARK_FILE" | awk '{print $1}')
+      entry_num=$(($entry_num + 1))
+      echo "${entry_num} ${PWD}" >>$MARK_FILE
+    fi
+    ;;
+  rm)
+    shift
+    entry=$(grep -E "^[$1]" ~/.mark)
+    if [[ "$?" -ne 0 ]]; then
+      echo "> Entry does not exist"
+    else
+      awk -v idx="$1" '$1 != idx' "$MARK_FILE" >temp.txt && mv temp.txt "$MARK_FILE"
+      awk '{print NR, substr($0, index($0,$2))}' "$MARK_FILE" >temp.txt && mv temp.txt "$MARK_FILE"
+      echo "> Removed mark: $(echo $entry | awk '{print $2}')"
+    fi
     ;;
   *)
     echo -e "Unrecognized option: \033[0;31m$@\033[0m"
@@ -35,6 +51,7 @@ if [[ -z "$MARK_SOURCED" ]]; then
   export MARK_FILE="${MARK_FILE:-${HOME}/.mark}"
 
   alias m='mark'
-  alias mcd='mark cd'
   alias mls='mark ls'
+  alias mcd='mark cd'
+  alias mrm='mark rm'
 fi
