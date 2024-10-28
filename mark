@@ -1,7 +1,7 @@
 mark() {
 
   if ! [ -f "$MARK_FILE" ]; then
-    echo "> Creating mark file at ${MARK_FILE}\n"
+    echo -e "> Creating mark file at ${MARK_FILE}\n"
     touch "$MARK_FILE"
   fi
 
@@ -12,7 +12,7 @@ mark() {
   cd)
     shift
     local dir=$(cat "$MARK_FILE" | grep -E '^[0-9]{1,2}' | awk -v idx="$1" '$1 == idx {print $2}')
-    cd "$dir"
+    echo "$dir" && cd "$dir"
     ;;
   "")
     entry_exist=$(cat "$MARK_FILE" | awk '{print $2}' | grep -w "^${PWD}$" | wc -l)
