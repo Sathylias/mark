@@ -36,6 +36,9 @@ mark() {
       echo "> Removed mark: $(echo $entry | awk '{print $2}')"
     fi
     ;;
+  help)
+    shift
+    ;;
   *)
     echo -e "Unrecognized option: \033[0;31m$@\033[0m"
     ;;
